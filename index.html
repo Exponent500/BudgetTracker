@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html ng-app="BudgetTracker" lang="en"> 
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Very Simple To Do App</title>
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
+        <link rel="stylesheet" href="bower_components/toastr/toastr.css" />
+        <!-- endbower -->
+
+        <!-- inject:css -->
+        <link rel="stylesheet" href="/app/styles/main.css">
+        <!-- endinject -->  
+    </head>
+
+    <body class="ng-cloak" ng-controller="MainController"> 
+        <div class="container">
+            <div class="jumbotron">
+                <h1>Budget Tracker</h1>
+            </div>
+
+            <div class="col-xs-6">
+                <!-- Panel to add a source of income -->
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <span>Income Entries</span>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <!-- Description of income source Input -->
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input class="form-control" type="text" ng-model="incomeDescription" name="description" placeholder="Enter a Description">
+                        </div>
+                        <!-- Amount Input -->
+                        <div class="form-group">
+                            <label for="income-amount">Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input class="form-control" type="number" ng-model="incomeAmount" name="income-amount" placeholder="Enter amount">
+                            </div>
+                        </div>
+                        <!-- Button to add a source of income -->
+                        <div class="form-group"> 
+                             <button type="button" class="btn btn-success form-control" ng-click="addIncome()"><span class="glyphicon glyphicon-plus"></span> Add Income</button> 
+                        </div>
+
+                        <!-- Table that will list income entries -->
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <strong>Description</strong>
+                                </td>
+                                <td>
+                                    <strong>Amount</strong>
+                                </td>
+                            </tr>
+                            <tr class="animated fadeInUp" ng-repeat="incomeItem in listOfIncomeItems">
+                                <td>
+                                    {{incomeItem.description}}
+                                </td>
+                                <td>
+                                    {{incomeItem.amount|currency}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-6">
+                <!-- Panel to add an expense -->
+                <div class="panel panel-danger">
+              
+                    <div class="panel-heading">
+                        <span>Expense Entries</span>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <!-- Description of expense Input -->
+                        <div class="form-group">
+                            <label for="expense-description">Description</label>
+                            <input class="form-control" type="text" ng-model="expenseDescription" name="expense-description" placeholder="Enter a Description">
+                        </div>
+                        <!-- Amount Input -->
+                        <div class="form-group">
+                            <label for="expense-amount">Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input class="form-control" type="number" ng-model="expenseAmount" name="expense-amount" placeholder="Enter amount">
+                            </div>
+                        </div>
+                        <!-- Button to add a source of expense -->
+                        <div class="form-group"> 
+                             <button type="button" class="btn btn-danger form-control" ng-click="addExpense()"><span class="glyphicon glyphicon-plus"></span> Add Expense</button>
+                        </div>
+
+                        <!-- Table that will list expense entries -->
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <strong>Description</strong>
+                                </td>
+                                <td>
+                                    <strong>Amount</strong>
+                                </td>
+                            </tr>
+                            <tr class="animated fadeInUp" ng-repeat="expenseItem in listOfExpenseItems">
+                                <td>
+                                    {{expenseItem.description}}
+                                </td>
+                                <td>
+                                    {{expenseItem.amount|currency}} 
+                                </td>
+                            </tr>
+                        </table>
+                    </div> 
+                
+                </div>                
+            </div> 
+
+            <div class="col-xs-6 col-xs-offset-3">
+                <!-- Panel to display summary -->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <span>Summary</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-6 text-center">
+                            <h5><strong>Total Income</strong></h5>
+                        </div>
+                        <div class="col-xs-6 text-center">
+                            <h5><strong>Total Expenses</strong></h5>
+                        </div>
+                        <div class="col-xs-6 text-center">
+                            <h4>{{totalIncome|currency}}</h4>
+                        </div>
+                        <div class="col-xs-6 text-center">
+                            <h4>{{totalExpenses|currency}}</h4>
+                        </div>                        
+                        <div class="col-xs-6 col-xs-offset-4 text center">
+                            <h5><strong>Left after Spending</strong></h5>
+                        </div>
+                        <div class="col-xs-6 col-xs-offset-3 text-center">
+                            <h4>{{totalIncome-totalExpenses|currency}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+             <div class="col-xs-6 col-xs-offset-3">
+                <!-- Panel to display Top 5 Largest Expenses -->
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <span>Top 5 Largest Expenses</span>
+                    </div>
+                    <div class="panel-body">
+                        <!-- Table that will list expense entries -->
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <strong>Description</strong>
+                                </td>
+                                <td>
+                                    <strong>Amount</strong>
+                                </td>
+                            </tr>
+                            <tr class="animated fadeInUp" ng-repeat="expenseItem in listOfExpenseItems | orderBy:'-amount' | limitTo: 5">
+                                <td class="ng-cloak">
+                                    {{expenseItem.description}}
+                                </td>
+                                <td class="ng-cloak">
+                                    {{expenseItem.amount|currency}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>       
+            </div>
+
+            <!-- Alert that shows up when the user enters in rent/mortgage expenses that together equal more than 25% of their income-->
+            <div class="col-xs-12">
+                <div ng-show="paymentsLargerThan25PercentOfIncome" class="ng-hide alert alert-warning" role="alert">
+                    <strong>Warning! </strong>Your rent/mortgage payments are more than 25% of your take home pay.                
+                </div>
+            </div>
+        </div>     
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/toastr/toastr.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
+        <!-- endbower -->
+
+        <!-- inject:js -->
+        <script src="/app/app.js"></script>
+        <!-- endinject -->
+    </body>
+</html>
